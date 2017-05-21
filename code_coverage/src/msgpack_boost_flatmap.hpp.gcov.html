@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info.cleaned - src/msgpack_boost_flatmap.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - msgpack_boost_flatmap.hpp<span style="font-size: 80%;"> (source / <a href="msgpack_boost_flatmap.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info.cleaned</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntryLo">72.2 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2017-05-21 23:37:28</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<span class="lineNum">       2 </span>            :   MessagePack for C++ static resolution routine
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            :   Copyright (C) 2014-2015 KONDO Takatoshi, 2017 Kaan Genç
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            :   Distributed under the Boost Software License, Version 1.0.
+<span class="lineNum">       7 </span>            :   (See accompanying file LICENSE_1_0.txt or copy at
+<span class="lineNum">       8 </span>            :   http://www.boost.org/LICENSE_1_0.txt)
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :   The code in this file is the MessagePack for C++'s unordered_map
+<span class="lineNum">      12 </span>            :   static resolution routine with some trivial modifications that adapt
+<span class="lineNum">      13 </span>            :   it to work with Boost's flat_map.
+<span class="lineNum">      14 </span>            :  */
+<span class="lineNum">      15 </span>            : #pragma once
+<span class="lineNum">      16 </span>            : #include &lt;boost/container/flat_map.hpp&gt;
+<span class="lineNum">      17 </span>            : #include &lt;msgpack.hpp&gt;
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : namespace msgpack {
+<span class="lineNum">      21 </span>            : MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
+<span class="lineNum">      22 </span>            : namespace adaptor {
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : template &lt;typename K, typename V&gt;
+<span class="lineNum">      26 </span>            : struct as&lt;
+<span class="lineNum">      27 </span>            :     boost::container::flat_map&lt;K, V&gt;,
+<span class="lineNum">      28 </span>            :     typename std::enable_if&lt;msgpack::has_as&lt;K&gt;::value || msgpack::has_as&lt;V&gt;::value&gt;::type&gt; {
+<span class="lineNum">      29 </span>            :     boost::container::flat_map&lt;K, V&gt; operator()(msgpack::object const &amp; o) const {
+<span class="lineNum">      30 </span>            :         if (o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
+<span class="lineNum">      31 </span>            :         msgpack::object_kv* p(o.via.map.ptr);
+<span class="lineNum">      32 </span>            :         msgpack::object_kv* const pend(o.via.map.ptr + o.via.map.size);
+<span class="lineNum">      33 </span>            :         boost::container::flat_map&lt;K, V&gt; v;
+<span class="lineNum">      34 </span>            :         for (; p != pend; ++p) {
+<span class="lineNum">      35 </span>            :             v.emplace(p-&gt;key.as&lt;K&gt;(), p-&gt;val.as&lt;V&gt;());
+<span class="lineNum">      36 </span>            :         }
+<span class="lineNum">      37 </span>            :         return v;
+<span class="lineNum">      38 </span>            :     }
+<span class="lineNum">      39 </span>            : };
+<span class="lineNum">      40 </span>            : 
+<a name="41"><span class="lineNum">      41 </span>            : template &lt;typename K, typename V&gt;</a>
+<span class="lineNum">      42 </span>            : struct convert&lt;boost::container::flat_map&lt;K, V&gt;&gt; {
+<span class="lineNum">      43 </span><span class="lineCov">          2 :     msgpack::object const&amp; operator()(msgpack::object const&amp; o, boost::container::flat_map&lt;K, V&gt; &amp; v) const {</span>
+<span class="lineNum">      44 </span><span class="lineCov">          2 :         if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }</span>
+<span class="lineNum">      45 </span><span class="lineCov">          2 :         msgpack::object_kv* p(o.via.map.ptr);</span>
+<span class="lineNum">      46 </span><span class="lineCov">          2 :         msgpack::object_kv* const pend(o.via.map.ptr + o.via.map.size);</span>
+<span class="lineNum">      47 </span><span class="lineCov">          4 :         boost::container::flat_map&lt;K, V&gt; tmp;</span>
+<span class="lineNum">      48 </span><span class="lineCov">          2 :         for(; p != pend; ++p) {</span>
+<span class="lineNum">      49 </span><span class="lineNoCov">          0 :             K key;</span>
+<span class="lineNum">      50 </span><span class="lineNoCov">          0 :             p-&gt;key.convert(key);</span>
+<span class="lineNum">      51 </span><span class="lineNoCov">          0 :             p-&gt;val.convert(tmp[std::move(key)]);</span>
+<span class="lineNum">      52 </span>            :         }
+<span class="lineNum">      53 </span><span class="lineCov">          2 :         v = std::move(tmp);</span>
+<span class="lineNum">      54 </span><span class="lineCov">          4 :         return o;</span>
+<span class="lineNum">      55 </span>            :     }
+<span class="lineNum">      56 </span>            : };
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : template &lt;typename K, typename V&gt;
+<a name="59"><span class="lineNum">      59 </span>            : struct pack&lt;boost::container::flat_map&lt;K, V&gt;&gt; {</a>
+<span class="lineNum">      60 </span>            :     template &lt;typename Stream&gt;
+<span class="lineNum">      61 </span><span class="lineCov">          2 :         msgpack::packer&lt;Stream&gt;&amp; operator()(msgpack::packer&lt;Stream&gt; &amp; o, const boost::container::flat_map&lt;K, V&gt; &amp; v) const {</span>
+<span class="lineNum">      62 </span><span class="lineCov">          2 :         uint32_t size = checked_get_container_size(v.size());</span>
+<span class="lineNum">      63 </span><span class="lineCov">          2 :         o.pack_map(size);</span>
+<span class="lineNum">      64 </span><span class="lineCov">          4 :         for(typename boost::container::flat_map&lt;K, V&gt;::const_iterator it(v.begin()), it_end(v.end());</span>
+<span class="lineNum">      65 </span>            :             it != it_end; ++it) {
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :             o.pack(it-&gt;first);</span>
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :             o.pack(it-&gt;second);</span>
+<span class="lineNum">      68 </span>            :         }
+<span class="lineNum">      69 </span><span class="lineCov">          2 :         return o;</span>
+<span class="lineNum">      70 </span>            :     }
+<span class="lineNum">      71 </span>            : };
+<span class="lineNum">      72 </span>            : 
+<span class="lineNum">      73 </span>            : template &lt;typename K, typename V&gt;
+<span class="lineNum">      74 </span>            : struct object_with_zone&lt;boost::container::flat_map&lt;K, V&gt;&gt; {
+<span class="lineNum">      75 </span>            :     void operator()(msgpack::object::with_zone&amp; o, const boost::container::flat_map&lt;K, V&gt; &amp; v) const {
+<span class="lineNum">      76 </span>            :         o.type = msgpack::type::MAP;
+<span class="lineNum">      77 </span>            :         if(v.empty()) {
+<span class="lineNum">      78 </span>            :             o.via.map.ptr  = MSGPACK_NULLPTR;
+<span class="lineNum">      79 </span>            :             o.via.map.size = 0;
+<span class="lineNum">      80 </span>            :         } else {
+<span class="lineNum">      81 </span>            :             uint32_t size = checked_get_container_size(v.size());
+<span class="lineNum">      82 </span>            :             msgpack::object_kv* p = static_cast&lt;msgpack::object_kv*&gt;(o.zone.allocate_align(sizeof(msgpack::object_kv)*size));
+<span class="lineNum">      83 </span>            :             msgpack::object_kv* const pend = p + size;
+<span class="lineNum">      84 </span>            :             o.via.map.ptr  = p;
+<span class="lineNum">      85 </span>            :             o.via.map.size = size;
+<span class="lineNum">      86 </span>            :             typename boost::container::flat_map&lt;K, V&gt;::const_iterator it(v.begin());
+<span class="lineNum">      87 </span>            :             do {
+<span class="lineNum">      88 </span>            :                 p-&gt;key = msgpack::object(it-&gt;first, o.zone);
+<span class="lineNum">      89 </span>            :                 p-&gt;val = msgpack::object(it-&gt;second, o.zone);
+<span class="lineNum">      90 </span>            :                 ++p;
+<span class="lineNum">      91 </span>            :                 ++it;
+<span class="lineNum">      92 </span>            :             } while(p &lt; pend);
+<span class="lineNum">      93 </span>            :         }
+<span class="lineNum">      94 </span>            :     }
+<span class="lineNum">      95 </span>            : };
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            : }
+<span class="lineNum">      99 </span>            : }
+<span class="lineNum">     100 </span>            : }
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

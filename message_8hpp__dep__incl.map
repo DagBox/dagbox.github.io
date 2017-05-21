@@ -1,0 +1,7 @@
+<map id="src/message.hpp" name="src/message.hpp">
+<area shape="rect" id="node2" href="$assistant_8hpp.html" title="src/assistant.hpp" alt="" coords="5,80,137,107"/>
+<area shape="rect" id="node3" href="$broker_8hpp.html" title="src/broker.hpp" alt="" coords="162,80,277,107"/>
+<area shape="rect" id="node4" href="$datastore_8hpp.html" title="src/worker/datastore.hpp" alt="" coords="301,80,485,107"/>
+<area shape="rect" id="node5" href="$lock_8hpp_source.html" title="src/worker/lock.hpp" alt="" coords="509,80,658,107"/>
+<area shape="rect" id="node6" href="$logic_8hpp_source.html" title="src/worker/logic.hpp" alt="" coords="683,80,836,107"/>
+</map>

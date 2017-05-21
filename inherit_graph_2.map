@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classdata_1_1datastore.html" title="The base class for all key&#45;value storage workers. " alt="" coords="5,31,127,57"/>
+<area shape="rect" id="node2" href="$classdata_1_1reader.html" title="A datatore reader. " alt="" coords="175,5,276,32"/>
+<area shape="rect" id="node3" href="$classdata_1_1writer.html" title="A datatore writer. " alt="" coords="177,56,274,83"/>
+</map>

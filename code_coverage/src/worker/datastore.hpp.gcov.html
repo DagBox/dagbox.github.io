@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info.cleaned - src/worker/datastore.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/worker</a> - datastore.hpp<span style="font-size: 80%;"> (source / <a href="datastore.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info.cleaned</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2017-05-21 23:37:28</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntryMed">89.5 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<span class="lineNum">       2 </span>            :   Copyright 2017 Kaan Genç
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            :   This file is part of DagBox.
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            :   DagBox is free software: you can redistribute it and/or modify it
+<span class="lineNum">       7 </span>            :   under the terms of the GNU Lesser General Public License as
+<span class="lineNum">       8 </span>            :   published by the Free Software Foundation, either version 3 of the
+<span class="lineNum">       9 </span>            :   License, or (at your option) any later version.
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :   DagBox is distributed in the hope that it will be useful, but
+<span class="lineNum">      12 </span>            :   WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      13 </span>            :   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+<span class="lineNum">      14 </span>            :   Lesser General Public License for more details.
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            :   You should have received a copy of the GNU Lesser General Public
+<span class="lineNum">      17 </span>            :   License along with DagBox.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+<span class="lineNum">      18 </span>            :  */
+<span class="lineNum">      19 </span>            : #pragma once
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      22 </span>            : #include &lt;boost/optional.hpp&gt;
+<span class="lineNum">      23 </span>            : #include &lt;boost/uuid/random_generator.hpp&gt;
+<span class="lineNum">      24 </span>            : #include &lt;boost/filesystem.hpp&gt;
+<span class="lineNum">      25 </span>            : #include &lt;boost/container/flat_map.hpp&gt;
+<span class="lineNum">      26 </span>            : #include &lt;zmq.hpp&gt;
+<span class="lineNum">      27 </span>            : #include &lt;msgpack.hpp&gt;
+<span class="lineNum">      28 </span>            : #include &quot;../msgpack_boost_flatmap.hpp&quot;
+<span class="lineNum">      29 </span>            : #include &lt;msgpack/adaptor/boost/optional.hpp&gt;
+<span class="lineNum">      30 </span>            : #include &lt;lmdb++.h&gt;
+<span class="lineNum">      31 </span>            : #include &quot;../message.hpp&quot;
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : namespace filesystem = boost::filesystem;
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : /*! \file datastore.hpp
+<span class="lineNum">      36 </span>            :  * Key-value storage worker and related utilities.
+<span class="lineNum">      37 </span>            :  */
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : /*! \brief Key-value storage worker and related utilities.
+<span class="lineNum">      42 </span>            :  */
+<span class="lineNum">      43 </span>            : namespace data
+<span class="lineNum">      44 </span>            : {
+<span class="lineNum">      45 </span>            :     namespace detail
+<span class="lineNum">      46 </span>            :     {
+<a name="47"><span class="lineNum">      47 </span>            :         namespace container=boost::container;</a>
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span><span class="lineCov">          7 :         struct read_request</span>
+<span class="lineNum">      50 </span>            :         {
+<span class="lineNum">      51 </span>            :             std::string bucket;
+<span class="lineNum">      52 </span>            :             std::string key;
+<span class="lineNum">      53 </span>            :             boost::optional&lt;std::string&gt; data;
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            :             // Boost map that allows incomplete types
+<a name="56"><span class="lineNum">      56 </span>            :             container::flat_map&lt;std::string, read_request&gt; relations;</a>
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span><span class="lineCov">          4 :             MSGPACK_DEFINE_MAP(bucket, key, data, relations);</span>
+<a name="59"><span class="lineNum">      59 </span>            :         };</a>
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span><span class="lineCov">          5 :         struct write_request</span>
+<span class="lineNum">      62 </span>            :         {
+<span class="lineNum">      63 </span>            :             std::string bucket;
+<a name="64"><span class="lineNum">      64 </span>            :             std::string data;</a>
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span><span class="lineCov">          2 :             MSGPACK_DEFINE_MAP(bucket, data);</span>
+<span class="lineNum">      67 </span>            :         };
+<span class="lineNum">      68 </span>            :     };
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span>            :     /*! \brief An LMDB storage environment.
+<span class="lineNum">      71 </span>            :      *
+<span class="lineNum">      72 </span>            :      * This class is a
+<span class="lineNum">      73 </span>            :      * [lmdb::env](http://lmdbxx.sourceforge.net/classlmdb_1_1env.html),
+<a name="74"><span class="lineNum">      74 </span>            :      * which opens itself automatically when created.</a>
+<span class="lineNum">      75 </span>            :      */
+<span class="lineNum">      76 </span><span class="lineCov">          1 :     class storage : public lmdb::env</span>
+<span class="lineNum">      77 </span>            :     {
+<span class="lineNum">      78 </span>            :     public:
+<span class="lineNum">      79 </span>            :         /*! \brief Maximum number of buckets that can be opened. */
+<span class="lineNum">      80 </span>            :         const static uint_fast8_t max_buckets = 32;
+<span class="lineNum">      81 </span>            :         /*! \brief Create a data storage.
+<span class="lineNum">      82 </span>            :          *
+<span class="lineNum">      83 </span>            :          * \param directory The directory where data will be stored.
+<span class="lineNum">      84 </span>            :          * Will be automatically created if it is missing. The program
+<span class="lineNum">      85 </span>            :          * must have write permissions in the given directory.
+<span class="lineNum">      86 </span>            :          */
+<span class="lineNum">      87 </span>            :         storage(filesystem::path const &amp; directory);
+<span class="lineNum">      88 </span>            :     };
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span>            :     /*! \brief The base class for all key-value storage workers.
+<span class="lineNum">      92 </span>            :      *
+<span class="lineNum">      93 </span>            :      * Provides various utilities for accessing key-value
+<span class="lineNum">      94 </span>            :      * [storage](\ref storage). Requests and replies are expected to
+<span class="lineNum">      95 </span>            :      * be serialized with messagepack. Child classes must override the
+<span class="lineNum">      96 </span>            :      * protected functions provided here to implement their own
+<span class="lineNum">      97 </span>            :      * functionality.
+<span class="lineNum">      98 </span>            :      *
+<span class="lineNum">      99 </span>            :      * This class also implements the required interface for
+<span class="lineNum">     100 </span>            :      * [assistant](\ref assistant), thus the classes that inherit it
+<a name="101"><span class="lineNum">     101 </span>            :      * will be compatible with assistant.</a>
+<span class="lineNum">     102 </span>            :      */
+<span class="lineNum">     103 </span><span class="lineCov">          2 :     class datastore</span>
+<span class="lineNum">     104 </span>            :     {
+<span class="lineNum">     105 </span>            :         storage &amp; env;
+<span class="lineNum">     106 </span>            :         std::unordered_map&lt;std::string, lmdb::dbi&gt; buckets;
+<span class="lineNum">     107 </span>            :     protected:
+<span class="lineNum">     108 </span>            :         /*! \brief Get a bucket.
+<span class="lineNum">     109 </span>            :          *
+<span class="lineNum">     110 </span>            :          * If the bucket doesn't exist, it will be created. If it does
+<span class="lineNum">     111 </span>            :          * exist but it hasn't been opened yet, it will be
+<span class="lineNum">     112 </span>            :          * opened. In any case, the existing open bucket will be returned.
+<span class="lineNum">     113 </span>            :          *
+<span class="lineNum">     114 </span>            :          * \param bucket_name The name of the requested bucket. Any
+<span class="lineNum">     115 </span>            :          * string may be used, subject to limitations of LMDB.
+<span class="lineNum">     116 </span>            :          * \param txn The current transaction.
+<span class="lineNum">     117 </span>            :          */
+<span class="lineNum">     118 </span>            :         auto get_open_bucket(std::string bucket_name, lmdb::txn &amp; txn)
+<span class="lineNum">     119 </span>            :             -&gt; lmdb::dbi &amp;;
+<span class="lineNum">     120 </span>            :         /*! \brief Process a request and return a response.
+<span class="lineNum">     121 </span>            :          *
+<span class="lineNum">     122 </span>            :          * Child classes must override this method to provide their
+<span class="lineNum">     123 </span>            :          * own request processing behaviour. The datastore will handle
+<span class="lineNum">     124 </span>            :          * details such as de-serializing of the request and opening
+<span class="lineNum">     125 </span>            :          * an LMDB transaction.
+<span class="lineNum">     126 </span>            :          *
+<span class="lineNum">     127 </span>            :          * \param req The request that needs to be processed.
+<span class="lineNum">     128 </span>            :          * \param txn The current transaction that has been opened for
+<span class="lineNum">     129 </span>            :          * this request.
+<span class="lineNum">     130 </span>            :          */
+<span class="lineNum">     131 </span>            :         auto virtual process_request(msgpack::object_handle &amp; req,
+<span class="lineNum">     132 </span>            :                                      lmdb::txn &amp; txn)
+<span class="lineNum">     133 </span>            :             -&gt; msgpack::sbuffer = 0;
+<span class="lineNum">     134 </span>            :         /*! \brief The flags that should be used when opening buckets.
+<span class="lineNum">     135 </span>            :          *
+<span class="lineNum">     136 </span>            :          * The datastore will open LMDB databases using the flags
+<span class="lineNum">     137 </span>            :          * returned by this function.  See the flags in [LMDB's
+<span class="lineNum">     138 </span>            :          * documentation](http://www.lmdb.tech/doc/group__mdb.html#gac08cad5b096925642ca359a6d6f0562a)
+<span class="lineNum">     139 </span>            :          * for possible values this function may return.
+<span class="lineNum">     140 </span>            :          */
+<span class="lineNum">     141 </span>            :         auto virtual bucket_open_flags() const -&gt; unsigned int = 0;
+<span class="lineNum">     142 </span>            :         /*! \brief The flags that should be used when starting transactions .
+<span class="lineNum">     143 </span>            :          *
+<span class="lineNum">     144 </span>            :          * The datastore will start LMDB transactions using the flags
+<span class="lineNum">     145 </span>            :          * returned by this function.  See the flags in [LMDB's
+<span class="lineNum">     146 </span>            :          * documentation](http://www.lmdb.tech/doc/group__mdb.html#gad7ea55da06b77513609efebd44b26920)
+<span class="lineNum">     147 </span>            :          * for possible values this function may return.
+<span class="lineNum">     148 </span>            :          */
+<span class="lineNum">     149 </span>            :         auto virtual txn_begin_flags() const -&gt; unsigned int = 0;
+<span class="lineNum">     150 </span>            :     public:
+<span class="lineNum">     151 </span>            :         /*! \brief The name of the service.
+<span class="lineNum">     152 </span>            :         *
+<span class="lineNum">     153 </span>            :         * Inheriting classes may override this name with a name of
+<span class="lineNum">     154 </span>            :         * their choice.
+<span class="lineNum">     155 </span>            :         */
+<span class="lineNum">     156 </span>            :         std::string const service_name = &quot;datastore&quot;;
+<span class="lineNum">     157 </span>            :         /*! \brief Create a datastore worker.
+<span class="lineNum">     158 </span>            :          *
+<span class="lineNum">     159 </span>            :          * \param env Storage that the datastore worker will use.
+<span class="lineNum">     160 </span>            :          */
+<span class="lineNum">     161 </span>            :         datastore(storage &amp; env);
+<span class="lineNum">     162 </span>            :         /*! \brief Process a data storage request.
+<span class="lineNum">     163 </span>            :          *
+<span class="lineNum">     164 </span>            :          * \param request A request message for data storage.
+<span class="lineNum">     165 </span>            :          *
+<span class="lineNum">     166 </span>            :          * \returns A reply message that contains the response to the
+<span class="lineNum">     167 </span>            :          * requst, ready to be sent.
+<span class="lineNum">     168 </span>            :          */
+<span class="lineNum">     169 </span>            :         auto operator()(msg::request &amp;&amp; request) -&gt; std::vector&lt;zmq::message_t&gt;;
+<span class="lineNum">     170 </span>            :     };
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span>            : 
+<a name="173"><span class="lineNum">     173 </span>            :     /*! \brief A datatore reader.</a>
+<span class="lineNum">     174 </span>            :      */
+<span class="lineNum">     175 </span><span class="lineCov">          1 :     class reader : public datastore</span>
+<span class="lineNum">     176 </span>            :     {
+<span class="lineNum">     177 </span>            :         auto process_request(msgpack::object_handle &amp; req, lmdb::txn &amp; txn)
+<span class="lineNum">     178 </span>            :             -&gt; msgpack::sbuffer override;
+<span class="lineNum">     179 </span>            :         auto bucket_open_flags() const -&gt; unsigned int override;
+<span class="lineNum">     180 </span>            :         auto txn_begin_flags() const -&gt; unsigned int override;
+<a name="181"><span class="lineNum">     181 </span>            :     public:</a>
+<span class="lineNum">     182 </span>            :         std::string const service_name = &quot;datastore reader&quot;;
+<span class="lineNum">     183 </span><span class="lineCov">          1 :         using datastore::datastore;</span>
+<span class="lineNum">     184 </span>            :     };
+<span class="lineNum">     185 </span>            : 
+<span class="lineNum">     186 </span>            : 
+<a name="187"><span class="lineNum">     187 </span>            :     /*! \brief A datatore writer.</a>
+<span class="lineNum">     188 </span>            :      */
+<span class="lineNum">     189 </span><span class="lineCov">          1 :     class writer : public datastore</span>
+<span class="lineNum">     190 </span>            :     {
+<span class="lineNum">     191 </span>            :         boost::uuids::basic_random_generator&lt;boost::mt19937&gt; key_generator;
+<span class="lineNum">     192 </span>            : 
+<span class="lineNum">     193 </span>            :         auto process_request(msgpack::object_handle &amp; req, lmdb::txn &amp; txn)
+<span class="lineNum">     194 </span>            :             -&gt; msgpack::sbuffer override;
+<span class="lineNum">     195 </span>            :         auto bucket_open_flags() const -&gt; unsigned int override;
+<span class="lineNum">     196 </span>            :         auto txn_begin_flags() const -&gt; unsigned int override;
+<a name="197"><span class="lineNum">     197 </span>            :     public:</a>
+<span class="lineNum">     198 </span>            :         std::string const service_name = &quot;datastore writer&quot;;
+<span class="lineNum">     199 </span><span class="lineCov">          1 :         using datastore::datastore;</span>
+<span class="lineNum">     200 </span>            :     };
+<span class="lineNum">     201 </span>            : };
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

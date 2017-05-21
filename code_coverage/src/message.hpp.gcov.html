@@ -1,0 +1,777 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info.cleaned - src/message.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - message.hpp<span style="font-size: 80%;"> (source / <a href="message.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info.cleaned</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">132</td>
+            <td class="headerCovTableEntry">139</td>
+            <td class="headerCovTableEntryHi">95.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2017-05-21 23:37:28</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">60</td>
+            <td class="headerCovTableEntry">65</td>
+            <td class="headerCovTableEntryHi">92.3 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<span class="lineNum">       2 </span>            :   Copyright 2017 Kaan Genç, Melis Narin Kaya
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            :   This file is part of DagBox.
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            :   DagBox is free software: you can redistribute it and/or modify it
+<span class="lineNum">       7 </span>            :   under the terms of the GNU Lesser General Public License as
+<span class="lineNum">       8 </span>            :   published by the Free Software Foundation, either version 3 of the
+<span class="lineNum">       9 </span>            :   License, or (at your option) any later version.
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :   DagBox is distributed in the hope that it will be useful, but
+<span class="lineNum">      12 </span>            :   WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      13 </span>            :   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+<span class="lineNum">      14 </span>            :   Lesser General Public License for more details.
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            :   You should have received a copy of the GNU Lesser General Public
+<span class="lineNum">      17 </span>            :   License along with DagBox.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+<span class="lineNum">      18 </span>            :  */
+<span class="lineNum">      19 </span>            : #pragma once
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      22 </span>            : #include &lt;tuple&gt;
+<span class="lineNum">      23 </span>            : #include &lt;boost/variant.hpp&gt;
+<span class="lineNum">      24 </span>            : #include &lt;boost/optional.hpp&gt;
+<span class="lineNum">      25 </span>            : #include &quot;exception.hpp&quot;
+<span class="lineNum">      26 </span>            : #include &quot;socket.hpp&quot;
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : // Allow ADL-selected overloads on begin and end for both user defined
+<span class="lineNum">      29 </span>            : // types (i.e. boost coroutines) and STL types
+<span class="lineNum">      30 </span>            : using std::begin;
+<span class="lineNum">      31 </span>            : using std::end;
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : /*! \file message.hpp
+<span class="lineNum">      35 </span>            :  * Helpers for handling messages.
+<span class="lineNum">      36 </span>            :  */
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : /*! \brief Helpers for handling messages.
+<span class="lineNum">      42 </span>            :  */
+<span class="lineNum">      43 </span>            : namespace msg
+<span class="lineNum">      44 </span>            : {
+<span class="lineNum">      45 </span>            :     /*! \brief Exactly one message part. */
+<span class="lineNum">      46 </span>            :     typedef zmq::message_t part;
+<span class="lineNum">      47 </span>            :     /*! \brief Zero or one message part. */
+<span class="lineNum">      48 </span>            :     typedef boost::optional&lt;part&gt; optional_part;
+<span class="lineNum">      49 </span>            :     /*! \brief Zero or more message parts. */
+<span class="lineNum">      50 </span>            :     typedef std::vector&lt;part&gt; many_parts;
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            :     /*! \brief A 0mq address. */
+<span class="lineNum">      53 </span>            :     typedef std::string address;
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            :     /*! \brief Exceptions that can be thrown by [msg](\ref msg)
+<span class="lineNum">      57 </span>            :      *  namespace.
+<span class="lineNum">      58 </span>            :      */
+<span class="lineNum">      59 </span>            :     namespace exception
+<span class="lineNum">      60 </span>            :     {
+<span class="lineNum">      61 </span>            :         using std::runtime_error;
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            :         /*! \brief A malformed message was recieved.
+<span class="lineNum">      64 </span>            :          *
+<span class="lineNum">      65 </span>            :          * The recieved message was from a completely different
+<span class="lineNum">      66 </span>            :          * protocol. This suggests that something that doesn't support
+<a name="67"><span class="lineNum">      67 </span>            :          * our protocol has connected to our socket.</a>
+<span class="lineNum">      68 </span>            :          */
+<span class="lineNum">      69 </span><span class="lineCov">         10 :         EXCEPTION(malformed, runtime_error);</span>
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span>            :         /*! \brief A message using an unsupported version of the
+<a name="72"><span class="lineNum">      72 </span>            :          *  protocol was recieved.</a>
+<span class="lineNum">      73 </span>            :          */
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :         EXCEPTION(unsupported_version, runtime_error);</span>
+<span class="lineNum">      75 </span>            :     }
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span>            :     namespace detail
+<span class="lineNum">      79 </span>            :     {
+<span class="lineNum">      80 </span>            :         namespace protocol
+<span class="lineNum">      81 </span>            :         {
+<span class="lineNum">      82 </span><span class="lineCov">          5 :             std::string const name = &quot;DGBX&quot;;</span>
+<span class="lineNum">      83 </span>            :             char const version = 0x01;
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span><span class="lineCov">          5 :             std::string const header = name + version;</span>
+<span class="lineNum">      86 </span>            :         }
+<span class="lineNum">      87 </span>            : 
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span>            :         enum class types
+<span class="lineNum">      90 </span>            :         {
+<span class="lineNum">      91 </span>            :             registration = 0x01,
+<span class="lineNum">      92 </span>            :             ping = 0x02,
+<span class="lineNum">      93 </span>            :             pong = 0x03,
+<span class="lineNum">      94 </span>            :             request = 0x04,
+<span class="lineNum">      95 </span>            :             reply = 0x05,
+<span class="lineNum">      96 </span>            :             reconnect = 0x06,
+<span class="lineNum">      97 </span>            :         };
+<span class="lineNum">      98 </span>            :         auto const type_upper_bound = static_cast&lt;char&gt;(types::reconnect);
+<span class="lineNum">      99 </span>            :         auto const type_lower_bound = static_cast&lt;char&gt;(types::registration);
+<span class="lineNum">     100 </span>            : 
+<a name="101"><span class="lineNum">     101 </span>            : </a>
+<span class="lineNum">     102 </span>            :         template &lt;class iterator&gt;
+<span class="lineNum">     103 </span><span class="lineCov">         96 :         auto read_part(iterator &amp; iter, iterator &amp; end) -&gt; part {</span>
+<span class="lineNum">     104 </span><span class="lineCov">         96 :             if (iter == end) {</span>
+<span class="lineNum">     105 </span><span class="lineCov">          1 :                 throw exception::malformed(&quot;Expected message part is missing&quot;);</span>
+<span class="lineNum">     106 </span>            :             }
+<span class="lineNum">     107 </span><span class="lineCov">         95 :             return std::move(*(iter++));</span>
+<span class="lineNum">     108 </span>            :         }
+<a name="109"><span class="lineNum">     109 </span>            : </a>
+<span class="lineNum">     110 </span>            :         template &lt;class iterator&gt;
+<span class="lineNum">     111 </span><span class="lineCov">         36 :         auto read_optional(iterator &amp; iter, iterator &amp; end) -&gt; optional_part {</span>
+<span class="lineNum">     112 </span>            :             // If there are no parts left, no optional part
+<span class="lineNum">     113 </span><span class="lineCov">         36 :             if (iter == end) {</span>
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :                 return boost::none;</span>
+<span class="lineNum">     115 </span>            :             }
+<span class="lineNum">     116 </span>            :             // If the first part is empty, no optional part
+<span class="lineNum">     117 </span><span class="lineCov">         72 :             part first = std::move(*iter);</span>
+<span class="lineNum">     118 </span><span class="lineCov">         36 :             if (first.size() == 0) {</span>
+<span class="lineNum">     119 </span><span class="lineCov">         26 :                 return boost::none;</span>
+<span class="lineNum">     120 </span>            :             }
+<span class="lineNum">     121 </span>            :             // If the first part is not empty, and there are no parts
+<span class="lineNum">     122 </span>            :             // left, then we found the optional part
+<span class="lineNum">     123 </span><span class="lineCov">         10 :             ++iter;</span>
+<span class="lineNum">     124 </span><span class="lineCov">         10 :             if (iter == end) {</span>
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :                 return std::move(first);</span>
+<span class="lineNum">     126 </span>            :             }
+<span class="lineNum">     127 </span>            :             // If the first part is not empty and the second part is, then
+<span class="lineNum">     128 </span>            :             // we found the optional part
+<span class="lineNum">     129 </span><span class="lineCov">         20 :             part second = std::move(*iter);</span>
+<span class="lineNum">     130 </span><span class="lineCov">         10 :             if (second.size() == 0) {</span>
+<span class="lineNum">     131 </span><span class="lineCov">          9 :                 return std::move(first);</span>
+<span class="lineNum">     132 </span>            :             }
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span>            :             // If both the first and the second part are not empty, then
+<span class="lineNum">     135 </span>            :             // we weren't sent an optional part at all
+<span class="lineNum">     136 </span><span class="lineCov">          1 :             throw exception::malformed(&quot;Expected optional message part &quot;</span>
+<span class="lineNum">     137 </span><span class="lineCov">          2 :                                        &quot;is malformed&quot;);</span>
+<span class="lineNum">     138 </span>            :         }
+<a name="139"><span class="lineNum">     139 </span>            : </a>
+<span class="lineNum">     140 </span>            :         template &lt;class iterator&gt;
+<span class="lineNum">     141 </span><span class="lineCov">         26 :         auto read_many(iterator &amp; iter, iterator &amp; end) -&gt; many_parts {</span>
+<span class="lineNum">     142 </span><span class="lineCov">         26 :             many_parts parts;</span>
+<span class="lineNum">     143 </span><span class="lineCov">         86 :             while (iter != end &amp;&amp; (*iter).size() != 0) {</span>
+<span class="lineNum">     144 </span><span class="lineCov">         30 :                 parts.push_back(std::move(*(iter++)));</span>
+<span class="lineNum">     145 </span>            :             }
+<span class="lineNum">     146 </span><span class="lineCov">         26 :             return parts;</span>
+<span class="lineNum">     147 </span>            :         }
+<span class="lineNum">     148 </span>            : 
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span>            :         class header;
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            : 
+<a name="153"><span class="lineNum">     153 </span>            :         typedef std::vector&lt;part&gt; part_sink;</a>
+<span class="lineNum">     154 </span>            : 
+<span class="lineNum">     155 </span><span class="lineCov">        122 :         auto inline send_section(part_sink &amp; sink, part &amp; p) -&gt; void</span>
+<span class="lineNum">     156 </span>            :         {
+<span class="lineNum">     157 </span><span class="lineCov">        122 :             sink.push_back(std::move(p));</span>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">        122 :         }</span></a>
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span><span class="lineCov">         42 :         auto inline send_section(part_sink &amp; sink, optional_part &amp; p) -&gt; void</span>
+<span class="lineNum">     161 </span>            :         {
+<span class="lineNum">     162 </span><span class="lineCov">         42 :             if (p) {</span>
+<span class="lineNum">     163 </span><span class="lineCov">          8 :                 sink.push_back(std::move(*p));</span>
+<span class="lineNum">     164 </span>            :             }
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">         42 :         }</span></a>
+<span class="lineNum">     166 </span>            : 
+<span class="lineNum">     167 </span><span class="lineCov">         28 :         auto inline send_section(part_sink &amp; sink, many_parts &amp; ps) -&gt; void</span>
+<span class="lineNum">     168 </span>            :         {
+<span class="lineNum">     169 </span><span class="lineCov">         58 :             for (auto &amp; p : ps) {</span>
+<span class="lineNum">     170 </span><span class="lineCov">         30 :                 sink.push_back(std::move(p));</span>
+<span class="lineNum">     171 </span>            :             }
+<span class="lineNum">     172 </span><span class="lineCov">         28 :         }</span>
+<span class="lineNum">     173 </span>            :     };
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span>            :     // Message types
+<span class="lineNum">     177 </span>            :     class registration;
+<span class="lineNum">     178 </span>            :     class ping;
+<span class="lineNum">     179 </span>            :     class pong;
+<span class="lineNum">     180 </span>            :     class request;
+<span class="lineNum">     181 </span>            :     class reply;
+<span class="lineNum">     182 </span>            :     class reconnect;
+<span class="lineNum">     183 </span>            : 
+<span class="lineNum">     184 </span>            :     /*! \brief Any message type.
+<span class="lineNum">     185 </span>            :      *
+<span class="lineNum">     186 </span>            :      * Represents a type that may be any of the message types. See
+<span class="lineNum">     187 </span>            :      * [boost::variant](http://www.boost.org/doc/libs/1_63_0/doc/html/variant.html)
+<span class="lineNum">     188 </span>            :      * on how to interact with this type.
+<span class="lineNum">     189 </span>            :      */
+<span class="lineNum">     190 </span>            :     typedef boost::variant&lt;
+<span class="lineNum">     191 </span>            :         registration,
+<span class="lineNum">     192 </span>            :         ping,
+<span class="lineNum">     193 </span>            :         pong,
+<span class="lineNum">     194 </span>            :         request,
+<span class="lineNum">     195 </span>            :         reply,
+<span class="lineNum">     196 </span>            :         reconnect
+<span class="lineNum">     197 </span>            :         &gt; any_message;
+<span class="lineNum">     198 </span>            : 
+<span class="lineNum">     199 </span>            : 
+<span class="lineNum">     200 </span>            :     /*! \brief Read a message from message parts.
+<span class="lineNum">     201 </span>            :      *
+<span class="lineNum">     202 </span>            :      * \param parts The message parts that make up the message.
+<span class="lineNum">     203 </span>            :      *
+<span class="lineNum">     204 </span>            :      * \returns Any of the message types, depending on what is read
+<span class="lineNum">     205 </span>            :      * from the iterator. If no exceptions have been thrown, the
+<span class="lineNum">     206 </span>            :      * message is guaranteed to be valid.
+<span class="lineNum">     207 </span>            :      *
+<span class="lineNum">     208 </span>            :      * \throws exception::malformed A malformed message was recieved.
+<span class="lineNum">     209 </span>            :      * \throws exception::unsupported_version A message using an
+<span class="lineNum">     210 </span>            :      * unsupported version of the protocol was received.
+<span class="lineNum">     211 </span>            :      *
+<span class="lineNum">     212 </span>            :      * Note that this function may throw an exception before consuming
+<span class="lineNum">     213 </span>            :      * the iterator completely.
+<span class="lineNum">     214 </span>            :      */
+<span class="lineNum">     215 </span>            :     auto read(std::vector&lt;zmq::message_t&gt; &amp;&amp; parts) -&gt; any_message;
+<span class="lineNum">     216 </span>            : 
+<span class="lineNum">     217 </span>            : 
+<span class="lineNum">     218 </span>            :     /*! \brief Some form of a container which can be iterated on to recieve message parts.
+<span class="lineNum">     219 </span>            :      *
+<span class="lineNum">     220 </span>            :      * `begin` and `end` functions can be called on this
+<span class="lineNum">     221 </span>            :      * pseudo-container to recieve
+<span class="lineNum">     222 </span>            :      * [InputIterator](http://en.cppreference.com/w/cpp/concept/InputIterator)s
+<span class="lineNum">     223 </span>            :      * that contain message parts.
+<span class="lineNum">     224 </span>            :      */
+<span class="lineNum">     225 </span>            :     typedef detail::part_sink part_source;
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            :     namespace detail
+<span class="lineNum">     228 </span>            :     {
+<span class="lineNum">     229 </span>            :         // The compilers don't seem to like friend'ing template
+<span class="lineNum">     230 </span>            :         // functions. So we create a dummy class here to make it
+<span class="lineNum">     231 </span>            :         // easier for message classes to friend the send function.
+<span class="lineNum">     232 </span>            :         struct sender
+<a name="233"><span class="lineNum">     233 </span>            :         {</a>
+<span class="lineNum">     234 </span>            :             template &lt;class message&gt;
+<span class="lineNum">     235 </span><span class="lineCov">         28 :             auto static inline send(message &amp; msg, detail::part_sink &amp; sink) -&gt; void {</span>
+<span class="lineNum">     236 </span><span class="lineCov">         28 :                 msg.head.send(sink);</span>
+<span class="lineNum">     237 </span><span class="lineCov">         28 :                 msg.send(sink);</span>
+<span class="lineNum">     238 </span><span class="lineCov">         28 :             }</span>
+<span class="lineNum">     239 </span>            :         };
+<span class="lineNum">     240 </span>            :     }
+<span class="lineNum">     241 </span>            : 
+<span class="lineNum">     242 </span>            : 
+<span class="lineNum">     243 </span>            :     /*! \brief Convert a message into an iterator that can be used to
+<span class="lineNum">     244 </span>            :      *  send that message.
+<span class="lineNum">     245 </span>            :      *
+<span class="lineNum">     246 </span>            :      * Note that once a message is passed to this function, that
+<span class="lineNum">     247 </span>            :      * message should be considered invalid and should not be accessed
+<span class="lineNum">     248 </span>            :      * in any way.
+<span class="lineNum">     249 </span>            :      *
+<span class="lineNum">     250 </span>            :      * \param msg The message to be sent.
+<span class="lineNum">     251 </span>            :      *
+<span class="lineNum">     252 </span>            :      * \returns A pair of iterators. The first iterator is the
+<span class="lineNum">     253 </span>            :      * beginning iterator, the second one is the end.
+<a name="254"><span class="lineNum">     254 </span>            :      */</a>
+<span class="lineNum">     255 </span>            :     template &lt;class message&gt;
+<span class="lineNum">     256 </span><span class="lineCov">         28 :     auto send(message &amp;&amp; msg)</span>
+<span class="lineNum">     257 </span>            :         -&gt; part_source {
+<span class="lineNum">     258 </span>            :         using namespace detail;
+<span class="lineNum">     259 </span>            : 
+<span class="lineNum">     260 </span><span class="lineCov">         28 :         part_sink sink;</span>
+<span class="lineNum">     261 </span><span class="lineCov">         28 :         sender::send(msg, sink);</span>
+<span class="lineNum">     262 </span><span class="lineCov">         28 :         return sink;</span>
+<span class="lineNum">     263 </span>            :     }
+<span class="lineNum">     264 </span>            : 
+<span class="lineNum">     265 </span>            : 
+<a name="266"><span class="lineNum">     266 </span>            :     namespace detail</a>
+<span class="lineNum">     267 </span>            :     {
+<span class="lineNum">     268 </span><span class="lineCov">        225 :         class header</span>
+<span class="lineNum">     269 </span>            :         {
+<span class="lineNum">     270 </span>            :             auto static make_protocol_part() noexcept -&gt; part;
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span>            :             auto static make_type_part(enum types type_) noexcept -&gt; part;
+<span class="lineNum">     273 </span>            : 
+<span class="lineNum">     274 </span>            :             optional_part address_;
+<span class="lineNum">     275 </span>            :             part address_delim;
+<span class="lineNum">     276 </span>            :             part protocol;
+<span class="lineNum">     277 </span>            :             part type_;
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span>            :             auto validate() -&gt; void;
+<span class="lineNum">     280 </span>            : 
+<span class="lineNum">     281 </span>            :             header(optional_part &amp;&amp; address_,
+<span class="lineNum">     282 </span>            :                    part &amp;&amp; address_delim,
+<span class="lineNum">     283 </span>            :                    part &amp;&amp; protocol,
+<span class="lineNum">     284 </span>            :                    part &amp;&amp; type_);
+<span class="lineNum">     285 </span>            : 
+<span class="lineNum">     286 </span>            :             auto send(detail::part_sink &amp; sink) -&gt; void;
+<span class="lineNum">     287 </span>            :         public:
+<span class="lineNum">     288 </span>            :             auto static make(enum types type_) noexcept -&gt; header;
+<a name="289"><span class="lineNum">     289 </span>            : </a>
+<span class="lineNum">     290 </span>            :             template &lt;class iterator&gt;
+<span class="lineNum">     291 </span><span class="lineCov">         21 :             auto static read(iterator &amp; iter, iterator &amp; end) -&gt; header {</span>
+<span class="lineNum">     292 </span>            :                 using namespace detail;
+<span class="lineNum">     293 </span>            : 
+<span class="lineNum">     294 </span><span class="lineCov">         42 :                 auto address_      = read_optional(iter, end);</span>
+<span class="lineNum">     295 </span><span class="lineCov">         42 :                 auto address_delim = read_part(iter, end);</span>
+<span class="lineNum">     296 </span><span class="lineCov">         42 :                 auto protocol      = read_part(iter, end);</span>
+<span class="lineNum">     297 </span><span class="lineCov">         42 :                 auto type_         = read_part(iter, end);</span>
+<span class="lineNum">     298 </span>            : 
+<span class="lineNum">     299 </span><span class="lineCov">         21 :                 header h(std::move(address_),</span>
+<span class="lineNum">     300 </span><span class="lineCov">         21 :                          std::move(address_delim),</span>
+<span class="lineNum">     301 </span><span class="lineCov">         21 :                          std::move(protocol),</span>
+<span class="lineNum">     302 </span><span class="lineCov">         42 :                          std::move(type_));</span>
+<span class="lineNum">     303 </span>            : 
+<span class="lineNum">     304 </span><span class="lineCov">         21 :                 h.validate();</span>
+<span class="lineNum">     305 </span>            : 
+<span class="lineNum">     306 </span><span class="lineCov">         42 :                 return h;</span>
+<span class="lineNum">     307 </span>            :             }
+<span class="lineNum">     308 </span>            : 
+<span class="lineNum">     309 </span>            :             auto type() const noexcept -&gt; enum types;
+<span class="lineNum">     310 </span>            :             auto type(enum types new_type) noexcept -&gt; void;
+<span class="lineNum">     311 </span>            :             auto address() const noexcept -&gt; boost::optional&lt;msg::address&gt;;
+<span class="lineNum">     312 </span>            :             auto address(msg::address const &amp; addr) -&gt; void;
+<span class="lineNum">     313 </span>            : 
+<span class="lineNum">     314 </span>            :             friend struct sender;
+<span class="lineNum">     315 </span>            :         };
+<span class="lineNum">     316 </span>            :     };
+<span class="lineNum">     317 </span>            : 
+<span class="lineNum">     318 </span>            : 
+<span class="lineNum">     319 </span>            :     /*! \brief A service registration message.
+<span class="lineNum">     320 </span>            :      *
+<span class="lineNum">     321 </span>            :      * Workers send this message to the broker to register the service
+<a name="322"><span class="lineNum">     322 </span>            :      * they can provide.</a>
+<span class="lineNum">     323 </span>            :      */
+<span class="lineNum">     324 </span><span class="lineCov">         19 :     class registration</span>
+<span class="lineNum">     325 </span>            :     {
+<span class="lineNum">     326 </span>            :         detail::header head;
+<span class="lineNum">     327 </span>            :         part service_;
+<span class="lineNum">     328 </span>            : 
+<span class="lineNum">     329 </span>            :         registration(detail::header &amp;&amp; head,
+<span class="lineNum">     330 </span>            :                      part &amp;&amp; service);
+<span class="lineNum">     331 </span>            : 
+<span class="lineNum">     332 </span>            :         auto send(detail::part_sink &amp; sink) -&gt; void;
+<a name="333"><span class="lineNum">     333 </span>            : </a>
+<span class="lineNum">     334 </span>            :         template &lt;class iterator&gt;
+<span class="lineNum">     335 </span><span class="lineCov">          4 :         auto static read(detail::header &amp;&amp; h, iterator &amp; iter, iterator &amp; end)</span>
+<span class="lineNum">     336 </span>            :             -&gt; registration {
+<span class="lineNum">     337 </span><span class="lineCov">          8 :             auto service = detail::read_part(iter, end);</span>
+<span class="lineNum">     338 </span>            : 
+<span class="lineNum">     339 </span><span class="lineCov">          4 :             return registration(std::move(h),</span>
+<span class="lineNum">     340 </span><span class="lineCov">         12 :                                 std::move(service));</span>
+<span class="lineNum">     341 </span>            :         }
+<span class="lineNum">     342 </span>            : 
+<span class="lineNum">     343 </span>            :         enum detail::types static const type = detail::types::registration;
+<span class="lineNum">     344 </span>            :     public:
+<span class="lineNum">     345 </span>            :         /*! \brief Create a service registration message.
+<span class="lineNum">     346 </span>            :          *
+<span class="lineNum">     347 </span>            :          * \param service_name The name of the service the worker can
+<span class="lineNum">     348 </span>            :          * provide.
+<span class="lineNum">     349 </span>            :          */
+<span class="lineNum">     350 </span>            :         auto static make(std::string const &amp; service_name) noexcept
+<span class="lineNum">     351 </span>            :             -&gt; registration;
+<span class="lineNum">     352 </span>            : 
+<a name="353"><span class="lineNum">     353 </span>            :         /*! \brief Get the service name this message is registering for.</a>
+<span class="lineNum">     354 </span>            :          */
+<span class="lineNum">     355 </span><span class="lineCov">          3 :         auto inline service() const noexcept -&gt; std::string const{</span>
+<span class="lineNum">     356 </span><span class="lineCov">          3 :             return std::string(service_.data&lt;char&gt;(), service_.size());</span>
+<span class="lineNum">     357 </span>            :         }
+<a name="358"><span class="lineNum">     358 </span>            : </a>
+<span class="lineNum">     359 </span>            :         /*! \brief Get the address of the sender. */
+<span class="lineNum">     360 </span><span class="lineCov">          1 :         auto inline address() const noexcept -&gt; boost::optional&lt;msg::address&gt; {</span>
+<span class="lineNum">     361 </span><span class="lineCov">          1 :             return head.address();</span>
+<span class="lineNum">     362 </span>            :         }
+<span class="lineNum">     363 </span>            : 
+<span class="lineNum">     364 </span>            :         friend auto read(std::vector&lt;zmq::message_t&gt; &amp;&amp; parts) -&gt; any_message;
+<span class="lineNum">     365 </span>            :         friend struct detail::sender;
+<span class="lineNum">     366 </span>            :     };
+<span class="lineNum">     367 </span>            : 
+<span class="lineNum">     368 </span>            : 
+<span class="lineNum">     369 </span>            :     /*! \brief A heartbeat message used to check if the
+<span class="lineNum">     370 </span>            :      *  recipient is alive.
+<span class="lineNum">     371 </span>            :      *
+<span class="lineNum">     372 </span>            :      * This message is typically sent by the broker to check if the
+<span class="lineNum">     373 </span>            :      * workers are still alive, but may be sent by the workers as
+<span class="lineNum">     374 </span>            :      * well.
+<span class="lineNum">     375 </span>            :      *
+<span class="lineNum">     376 </span>            :      * The recipient of the message must reply with a [pong](\ref pong)
+<a name="377"><span class="lineNum">     377 </span>            :      * message.</a>
+<span class="lineNum">     378 </span>            :      */
+<span class="lineNum">     379 </span><span class="lineCov">         16 :     class ping</span>
+<span class="lineNum">     380 </span>            :     {
+<span class="lineNum">     381 </span>            :         detail::header head;
+<span class="lineNum">     382 </span>            : 
+<span class="lineNum">     383 </span>            :         ping(detail::header &amp;&amp; head);
+<span class="lineNum">     384 </span>            : 
+<span class="lineNum">     385 </span>            :         auto send(detail::part_sink &amp; sink) -&gt; void;
+<a name="386"><span class="lineNum">     386 </span>            : </a>
+<span class="lineNum">     387 </span>            :         template &lt;class iterator&gt;
+<span class="lineNum">     388 </span><span class="lineCov">          2 :         auto static read(detail::header &amp;&amp; h, iterator &amp;, iterator &amp;)</span>
+<span class="lineNum">     389 </span>            :             -&gt; ping {
+<span class="lineNum">     390 </span><span class="lineCov">          2 :             return ping(std::move(h));</span>
+<span class="lineNum">     391 </span>            :         }
+<span class="lineNum">     392 </span>            : 
+<span class="lineNum">     393 </span>            :         enum detail::types static const type = detail::types::ping;
+<span class="lineNum">     394 </span>            :     public:
+<span class="lineNum">     395 </span>            :         /*! \brief Create a heartbeat message. */
+<span class="lineNum">     396 </span>            :         auto static make() noexcept -&gt; ping;
+<a name="397"><span class="lineNum">     397 </span>            : </a>
+<span class="lineNum">     398 </span>            :         /*! \brief Get the address of the sender. */
+<span class="lineNum">     399 </span><span class="lineCov">          1 :         auto inline address() const noexcept -&gt; boost::optional&lt;msg::address&gt; {</span>
+<span class="lineNum">     400 </span><span class="lineCov">          1 :             return head.address();</span>
+<span class="lineNum">     401 </span>            :         }
+<span class="lineNum">     402 </span>            : 
+<span class="lineNum">     403 </span>            :         friend auto read(std::vector&lt;zmq::message_t&gt; &amp;&amp; parts) -&gt; any_message;
+<span class="lineNum">     404 </span>            :         friend struct detail::sender;
+<span class="lineNum">     405 </span>            :         friend class pong;
+<span class="lineNum">     406 </span>            :         friend class reconnect;
+<span class="lineNum">     407 </span>            :     };
+<span class="lineNum">     408 </span>            : 
+<span class="lineNum">     409 </span>            : 
+<span class="lineNum">     410 </span>            :     /*! \brief A heartbeat response used to indicate that the sender
+<span class="lineNum">     411 </span>            :      *  is alive.
+<span class="lineNum">     412 </span>            :      *
+<span class="lineNum">     413 </span>            :      * When the broker or a worker recieves a [ping](\ref ping), they
+<a name="414"><span class="lineNum">     414 </span>            :      * must reply with this message.</a>
+<span class="lineNum">     415 </span>            :      */
+<span class="lineNum">     416 </span><span class="lineCov">         10 :     class pong</span>
+<span class="lineNum">     417 </span>            :     {
+<span class="lineNum">     418 </span>            :         detail::header head;
+<span class="lineNum">     419 </span>            : 
+<span class="lineNum">     420 </span>            :         pong(detail::header &amp;&amp; head);
+<span class="lineNum">     421 </span>            : 
+<span class="lineNum">     422 </span>            :         auto send(detail::part_sink &amp; sink) -&gt; void;
+<a name="423"><span class="lineNum">     423 </span>            : </a>
+<span class="lineNum">     424 </span>            :         template &lt;class iterator&gt;
+<span class="lineNum">     425 </span><span class="lineCov">          2 :         auto static read(detail::header &amp;&amp; h, iterator &amp;, iterator &amp;)</span>
+<span class="lineNum">     426 </span>            :             -&gt; pong {
+<span class="lineNum">     427 </span><span class="lineCov">          2 :             return pong(std::move(h));</span>
+<span class="lineNum">     428 </span>            :         }
+<span class="lineNum">     429 </span>            : 
+<span class="lineNum">     430 </span>            :         enum detail::types static const type = detail::types::pong;
+<span class="lineNum">     431 </span>            :     public:
+<span class="lineNum">     432 </span>            :         /*! \brief Create a response for a heartbeat message.
+<span class="lineNum">     433 </span>            :          *
+<span class="lineNum">     434 </span>            :          * \param p The received ping this pong will be replying to.
+<span class="lineNum">     435 </span>            :          */
+<span class="lineNum">     436 </span>            :         auto static make(ping &amp;&amp; p) noexcept -&gt; pong;
+<a name="437"><span class="lineNum">     437 </span>            : </a>
+<span class="lineNum">     438 </span>            :         /*! \brief Get the address of the sender. */
+<span class="lineNum">     439 </span><span class="lineNoCov">          0 :         auto inline address() const noexcept -&gt; boost::optional&lt;msg::address&gt; {</span>
+<span class="lineNum">     440 </span><span class="lineNoCov">          0 :             return head.address();</span>
+<span class="lineNum">     441 </span>            :         }
+<span class="lineNum">     442 </span>            : 
+<span class="lineNum">     443 </span>            :         friend auto read(std::vector&lt;zmq::message_t&gt; &amp;&amp; parts) -&gt; any_message;
+<span class="lineNum">     444 </span>            :         friend struct detail::sender;
+<span class="lineNum">     445 </span>            :     };
+<span class="lineNum">     446 </span>            : 
+<span class="lineNum">     447 </span>            : 
+<a name="448"><span class="lineNum">     448 </span>            :     /*! \brief A request for a service to do some form of work.</a>
+<span class="lineNum">     449 </span>            :      */
+<span class="lineNum">     450 </span><span class="lineCov">         22 :     class request</span>
+<span class="lineNum">     451 </span>            :     {
+<span class="lineNum">     452 </span>            :         detail::header head;
+<span class="lineNum">     453 </span>            :         part          service_;
+<span class="lineNum">     454 </span>            :         optional_part client_;
+<span class="lineNum">     455 </span>            :         part          client_delimiter;
+<span class="lineNum">     456 </span>            :         many_parts    metadata_;
+<span class="lineNum">     457 </span>            :         part          metadata_delimiter;
+<span class="lineNum">     458 </span>            :         many_parts    data_;
+<span class="lineNum">     459 </span>            : 
+<span class="lineNum">     460 </span>            :         request(detail::header &amp;&amp; head,
+<span class="lineNum">     461 </span>            :                 part           &amp;&amp; service_,
+<span class="lineNum">     462 </span>            :                 optional_part  &amp;&amp; client_,
+<span class="lineNum">     463 </span>            :                 part           &amp;&amp; client_delimiter,
+<span class="lineNum">     464 </span>            :                 many_parts     &amp;&amp; metadata,
+<span class="lineNum">     465 </span>            :                 part           &amp;&amp; metadata_delimiter,
+<span class="lineNum">     466 </span>            :                 many_parts     &amp;&amp; data);
+<span class="lineNum">     467 </span>            : 
+<span class="lineNum">     468 </span>            :         auto send(detail::part_sink &amp; sink) -&gt; void;
+<a name="469"><span class="lineNum">     469 </span>            : </a>
+<span class="lineNum">     470 </span>            :         template &lt;class iterator&gt;
+<span class="lineNum">     471 </span><span class="lineCov">          3 :         auto static read(detail::header &amp;&amp; head,</span>
+<span class="lineNum">     472 </span>            :                          iterator &amp; iter,
+<span class="lineNum">     473 </span>            :                          iterator &amp; end)
+<span class="lineNum">     474 </span>            :             -&gt; request {
+<span class="lineNum">     475 </span>            :             using namespace detail;
+<span class="lineNum">     476 </span>            : 
+<span class="lineNum">     477 </span><span class="lineCov">          6 :             auto service_           = read_part(iter, end);</span>
+<span class="lineNum">     478 </span><span class="lineCov">          6 :             auto client_            = read_optional(iter, end);</span>
+<span class="lineNum">     479 </span><span class="lineCov">          6 :             auto client_delimiter   = read_part(iter, end);</span>
+<span class="lineNum">     480 </span><span class="lineCov">          6 :             auto metadata           = read_many(iter, end);</span>
+<span class="lineNum">     481 </span><span class="lineCov">          6 :             auto metadata_delimiter = read_part(iter, end);</span>
+<span class="lineNum">     482 </span><span class="lineCov">          6 :             auto data               = read_many(iter, end);</span>
+<span class="lineNum">     483 </span>            : 
+<span class="lineNum">     484 </span><span class="lineCov">          3 :             return request(std::move(head),</span>
+<span class="lineNum">     485 </span><span class="lineCov">          3 :                            std::move(service_),</span>
+<span class="lineNum">     486 </span><span class="lineCov">          3 :                            std::move(client_),</span>
+<span class="lineNum">     487 </span><span class="lineCov">          3 :                            std::move(client_delimiter),</span>
+<span class="lineNum">     488 </span><span class="lineCov">          3 :                            std::move(metadata),</span>
+<span class="lineNum">     489 </span><span class="lineCov">          3 :                            std::move(metadata_delimiter),</span>
+<span class="lineNum">     490 </span><span class="lineCov">          9 :                            std::move(data));</span>
+<span class="lineNum">     491 </span>            :         }
+<span class="lineNum">     492 </span>            : 
+<span class="lineNum">     493 </span>            :         enum detail::types static const type = detail::types::request;
+<span class="lineNum">     494 </span>            :     public:
+<span class="lineNum">     495 </span>            :         /*! \brief Create a new request.
+<span class="lineNum">     496 </span>            :          *
+<span class="lineNum">     497 </span>            :          * \param service_name The name of the service the request
+<span class="lineNum">     498 </span>            :          * will be sent to.
+<span class="lineNum">     499 </span>            :          *
+<span class="lineNum">     500 </span>            :          * \param metadata_parts Metadata about the request. These
+<span class="lineNum">     501 </span>            :          * metadata parts will be returned back to the client along
+<span class="lineNum">     502 </span>            :          * with the reply without any modifications. This can be used,
+<span class="lineNum">     503 </span>            :          * for example, to match requests and replies when sending
+<span class="lineNum">     504 </span>            :          * multiple requests at once.
+<span class="lineNum">     505 </span>            :          *
+<span class="lineNum">     506 </span>            :          * \param data_parts The data of the request. The format of
+<span class="lineNum">     507 </span>            :          * these parts depend on the service.
+<span class="lineNum">     508 </span>            :          */
+<span class="lineNum">     509 </span>            :         auto static make(std::string const &amp; service_name,
+<span class="lineNum">     510 </span>            :                          many_parts &amp;&amp; metadata_parts,
+<span class="lineNum">     511 </span>            :                          many_parts &amp;&amp; data_parts)
+<span class="lineNum">     512 </span>            :             -&gt; request;
+<span class="lineNum">     513 </span>            : 
+<span class="lineNum">     514 </span>            :         /*! \brief Get the metadata of the request.
+<span class="lineNum">     515 </span>            :          *
+<span class="lineNum">     516 </span>            :          * The reference returned by this function is valid as long as
+<span class="lineNum">     517 </span>            :          * the object it is called on is. In other words, the
+<span class="lineNum">     518 </span>            :          * reference should not be used after the message object is
+<a name="519"><span class="lineNum">     519 </span>            :          * moved (`std::move`) or destructed.</a>
+<span class="lineNum">     520 </span>            :          */
+<span class="lineNum">     521 </span><span class="lineCov">          3 :         auto inline metadata() -&gt; many_parts &amp; {</span>
+<span class="lineNum">     522 </span><span class="lineCov">          3 :             return metadata_;</span>
+<span class="lineNum">     523 </span>            :         }
+<span class="lineNum">     524 </span>            :         /*! \brief Get the data of the request.
+<span class="lineNum">     525 </span>            :          *
+<span class="lineNum">     526 </span>            :          * The reference returned by this function is valid as long as
+<span class="lineNum">     527 </span>            :          * the object it is called on is. In other words, the
+<span class="lineNum">     528 </span>            :          * reference should not be used after the message object is
+<a name="529"><span class="lineNum">     529 </span>            :          * moved (`std::move`) or destructed.</a>
+<span class="lineNum">     530 </span>            :          */
+<span class="lineNum">     531 </span><span class="lineCov">         11 :         auto inline data() -&gt; many_parts &amp; {</span>
+<span class="lineNum">     532 </span><span class="lineCov">         11 :             return data_;</span>
+<span class="lineNum">     533 </span>            :         }
+<a name="534"><span class="lineNum">     534 </span>            : </a>
+<span class="lineNum">     535 </span>            :         /*! \brief Get the name of the service the request was sent to. */
+<span class="lineNum">     536 </span><span class="lineCov">          2 :         auto inline service() const noexcept -&gt; std::string {</span>
+<span class="lineNum">     537 </span><span class="lineCov">          2 :             return std::string(service_.data&lt;char&gt;(), service_.size());</span>
+<span class="lineNum">     538 </span>            :         }
+<a name="539"><span class="lineNum">     539 </span>            : </a>
+<span class="lineNum">     540 </span>            :         /*! \brief Get the address of the sender. */
+<span class="lineNum">     541 </span><span class="lineCov">          1 :         auto inline address() const noexcept -&gt; boost::optional&lt;msg::address&gt; {</span>
+<span class="lineNum">     542 </span><span class="lineCov">          1 :             return head.address();</span>
+<span class="lineNum">     543 </span>            :         }
+<a name="544"><span class="lineNum">     544 </span>            : </a>
+<span class="lineNum">     545 </span>            :         /*! \brief Change the address of the sender. */
+<span class="lineNum">     546 </span><span class="lineCov">          1 :         auto inline address(msg::address const &amp; addr) -&gt; void {</span>
+<span class="lineNum">     547 </span><span class="lineCov">          1 :             head.address(addr);</span>
+<span class="lineNum">     548 </span><span class="lineCov">          1 :         }</span>
+<span class="lineNum">     549 </span>            : 
+<a name="550"><span class="lineNum">     550 </span>            :         /*! \brief Get the address of the client that originally sent</a>
+<span class="lineNum">     551 </span>            :          *  the request. */
+<span class="lineNum">     552 </span><span class="lineCov">          1 :         auto inline client() const noexcept -&gt; boost::optional&lt;msg::address&gt; {</span>
+<span class="lineNum">     553 </span><span class="lineCov">          2 :             if (client_) {</span>
+<span class="lineNum">     554 </span><span class="lineNoCov">          0 :                 return std::string(client_-&gt;data&lt;char&gt;(), client_-&gt;size());</span>
+<span class="lineNum">     555 </span>            :             } else {
+<span class="lineNum">     556 </span><span class="lineCov">          1 :                 return boost::none;</span>
+<span class="lineNum">     557 </span>            :             }
+<span class="lineNum">     558 </span>            :         }
+<span class="lineNum">     559 </span>            : 
+<a name="560"><span class="lineNum">     560 </span>            :         /*! \brief Set the address of the client that originally sent</a>
+<span class="lineNum">     561 </span>            :          *  the request. */
+<span class="lineNum">     562 </span><span class="lineCov">          1 :         auto inline client(msg::address const &amp; addr) noexcept -&gt; void {</span>
+<span class="lineNum">     563 </span><span class="lineCov">          1 :             client_ = part(addr.data(), addr.size());</span>
+<span class="lineNum">     564 </span><span class="lineCov">          1 :         }</span>
+<span class="lineNum">     565 </span>            : 
+<span class="lineNum">     566 </span>            :         friend auto read(std::vector&lt;zmq::message_t&gt; &amp;&amp; parts) -&gt; any_message;
+<span class="lineNum">     567 </span>            :         friend struct detail::sender;
+<span class="lineNum">     568 </span>            :         friend class reply;
+<span class="lineNum">     569 </span>            :     };
+<span class="lineNum">     570 </span>            : 
+<span class="lineNum">     571 </span>            : 
+<a name="572"><span class="lineNum">     572 </span>            :     /*! \brief A reply from a service containing the result of requested work.</a>
+<span class="lineNum">     573 </span>            :      */
+<span class="lineNum">     574 </span><span class="lineCov">         37 :     class reply</span>
+<span class="lineNum">     575 </span>            :     {
+<span class="lineNum">     576 </span>            :         detail::header head;
+<span class="lineNum">     577 </span>            :         optional_part client_;
+<span class="lineNum">     578 </span>            :         part          client_delimiter;
+<span class="lineNum">     579 </span>            :         many_parts    metadata_;
+<span class="lineNum">     580 </span>            :         part          metadata_delimiter;
+<span class="lineNum">     581 </span>            :         many_parts    data_;
+<span class="lineNum">     582 </span>            : 
+<span class="lineNum">     583 </span>            :         reply(detail::header &amp;&amp; head,
+<span class="lineNum">     584 </span>            :               optional_part &amp;&amp; client_,
+<span class="lineNum">     585 </span>            :               part          &amp;&amp; client_delimiter,
+<span class="lineNum">     586 </span>            :               many_parts    &amp;&amp; metadata,
+<span class="lineNum">     587 </span>            :               part          &amp;&amp; metadata_delimiter,
+<span class="lineNum">     588 </span>            :               many_parts    &amp;&amp; data);
+<span class="lineNum">     589 </span>            : 
+<span class="lineNum">     590 </span>            :         auto send(detail::part_sink &amp; sink) -&gt; void;
+<a name="591"><span class="lineNum">     591 </span>            : </a>
+<span class="lineNum">     592 </span>            :         template &lt;class iterator&gt;
+<span class="lineNum">     593 </span><span class="lineCov">          9 :         auto static read(detail::header &amp;&amp; head,</span>
+<span class="lineNum">     594 </span>            :                          iterator &amp; iter,
+<span class="lineNum">     595 </span>            :                          iterator &amp; end)
+<span class="lineNum">     596 </span>            :             -&gt; reply {
+<span class="lineNum">     597 </span>            :             using namespace detail;
+<span class="lineNum">     598 </span>            : 
+<span class="lineNum">     599 </span><span class="lineCov">         18 :             auto client_            = read_optional(iter, end);</span>
+<span class="lineNum">     600 </span><span class="lineCov">         18 :             auto client_delimiter   = read_part(iter, end);</span>
+<span class="lineNum">     601 </span><span class="lineCov">         18 :             auto metadata           = read_many(iter, end);</span>
+<span class="lineNum">     602 </span><span class="lineCov">         18 :             auto metadata_delimiter = read_part(iter, end);</span>
+<span class="lineNum">     603 </span><span class="lineCov">         18 :             auto data               = read_many(iter, end);</span>
+<span class="lineNum">     604 </span>            : 
+<span class="lineNum">     605 </span><span class="lineCov">          9 :             return reply(std::move(head),</span>
+<span class="lineNum">     606 </span><span class="lineCov">          9 :                          std::move(client_),</span>
+<span class="lineNum">     607 </span><span class="lineCov">          9 :                          std::move(client_delimiter),</span>
+<span class="lineNum">     608 </span><span class="lineCov">          9 :                          std::move(metadata),</span>
+<span class="lineNum">     609 </span><span class="lineCov">          9 :                          std::move(metadata_delimiter),</span>
+<span class="lineNum">     610 </span><span class="lineCov">         27 :                          std::move(data));</span>
+<span class="lineNum">     611 </span>            :         }
+<span class="lineNum">     612 </span>            : 
+<span class="lineNum">     613 </span>            :         enum detail::types static const type = detail::types::reply;
+<span class="lineNum">     614 </span>            :     public:
+<span class="lineNum">     615 </span>            :         /*! \brief Create a response for a request.
+<span class="lineNum">     616 </span>            :          */
+<span class="lineNum">     617 </span>            :         auto static make(request &amp;&amp; r) -&gt; reply;
+<span class="lineNum">     618 </span>            : 
+<span class="lineNum">     619 </span>            :         /*! \brief Get the metadata of the request.
+<span class="lineNum">     620 </span>            :          *
+<span class="lineNum">     621 </span>            :          * The reference returned by this function is valid as long as
+<span class="lineNum">     622 </span>            :          * the object it is called on is. In other words, the
+<span class="lineNum">     623 </span>            :          * reference should not be used after the message object is
+<a name="624"><span class="lineNum">     624 </span>            :          * moved (`std::move`) or destructed.</a>
+<span class="lineNum">     625 </span>            :          */
+<span class="lineNum">     626 </span><span class="lineCov">          3 :         auto inline metadata() -&gt; many_parts &amp; {</span>
+<span class="lineNum">     627 </span><span class="lineCov">          3 :             return metadata_;</span>
+<span class="lineNum">     628 </span>            :         }
+<span class="lineNum">     629 </span>            :         /*! \brief Get the data of the request.
+<span class="lineNum">     630 </span>            :          *
+<span class="lineNum">     631 </span>            :          * The reference returned by this function is valid as long as
+<span class="lineNum">     632 </span>            :          * the object it is called on is. In other words, the
+<span class="lineNum">     633 </span>            :          * reference should not be used after the message object is
+<a name="634"><span class="lineNum">     634 </span>            :          * moved (`std::move`) or destructed.</a>
+<span class="lineNum">     635 </span>            :          */
+<span class="lineNum">     636 </span><span class="lineCov">         15 :         auto inline data() -&gt; many_parts &amp; {</span>
+<span class="lineNum">     637 </span><span class="lineCov">         15 :             return data_;</span>
+<span class="lineNum">     638 </span>            :         }
+<a name="639"><span class="lineNum">     639 </span>            : </a>
+<span class="lineNum">     640 </span>            :         /*! \brief Get the address of the sender. */
+<span class="lineNum">     641 </span><span class="lineCov">          1 :         auto inline address() const noexcept -&gt; boost::optional&lt;msg::address&gt; {</span>
+<span class="lineNum">     642 </span><span class="lineCov">          1 :             return head.address();</span>
+<span class="lineNum">     643 </span>            :         }
+<a name="644"><span class="lineNum">     644 </span>            : </a>
+<span class="lineNum">     645 </span>            :         /*! \brief Change the address of the sender. */
+<span class="lineNum">     646 </span><span class="lineCov">          1 :         auto inline address(msg::address const &amp; addr) -&gt; void {</span>
+<span class="lineNum">     647 </span><span class="lineCov">          1 :             head.address(addr);</span>
+<span class="lineNum">     648 </span><span class="lineCov">          1 :         }</span>
+<a name="649"><span class="lineNum">     649 </span>            : </a>
+<span class="lineNum">     650 </span>            :         /*! \brief Get the destination of the reply. */
+<span class="lineNum">     651 </span><span class="lineCov">          1 :         auto inline client() const noexcept -&gt; boost::optional&lt;msg::address&gt; {</span>
+<span class="lineNum">     652 </span><span class="lineCov">          2 :             if (client_) {</span>
+<span class="lineNum">     653 </span><span class="lineCov">          1 :                 return std::string(client_-&gt;data&lt;char&gt;(), client_-&gt;size());</span>
+<span class="lineNum">     654 </span>            :             } else {
+<span class="lineNum">     655 </span><span class="lineNoCov">          0 :                 return boost::none;</span>
+<span class="lineNum">     656 </span>            :             }
+<span class="lineNum">     657 </span>            :         }
+<span class="lineNum">     658 </span>            : 
+<span class="lineNum">     659 </span>            :         /*! \brief Set the destination of the reply. */
+<span class="lineNum">     660 </span>            :         auto inline client(msg::address const &amp; addr) noexcept -&gt; void {
+<span class="lineNum">     661 </span>            :             client_ = part(addr.data(), addr.size());
+<span class="lineNum">     662 </span>            :         }
+<span class="lineNum">     663 </span>            : 
+<span class="lineNum">     664 </span>            :         friend auto read(std::vector&lt;zmq::message_t&gt; &amp;&amp; parts) -&gt; any_message;
+<span class="lineNum">     665 </span>            :         friend struct detail::sender;
+<span class="lineNum">     666 </span>            :     };
+<span class="lineNum">     667 </span>            : 
+<span class="lineNum">     668 </span>            :     /*! \brief A re-connect message signalling a worker to re-register.
+<span class="lineNum">     669 </span>            :      *
+<span class="lineNum">     670 </span>            :      * When the broker receives a ping from a worker that is not
+<span class="lineNum">     671 </span>            :      * registered with it, this can mean that the worker expects that
+<span class="lineNum">     672 </span>            :      * it is registered. In that case, the broker will reply with a
+<span class="lineNum">     673 </span>            :      * reconnect message to signal the worker that it is not actually
+<a name="674"><span class="lineNum">     674 </span>            :      * registered.</a>
+<span class="lineNum">     675 </span>            :      */
+<span class="lineNum">     676 </span><span class="lineCov">          6 :     class reconnect</span>
+<span class="lineNum">     677 </span>            :     {
+<span class="lineNum">     678 </span>            :         detail::header head;
+<span class="lineNum">     679 </span>            : 
+<span class="lineNum">     680 </span>            :         reconnect(detail::header &amp;&amp; head);
+<span class="lineNum">     681 </span>            : 
+<span class="lineNum">     682 </span>            :         auto send(detail::part_sink &amp; sink) -&gt; void;
+<a name="683"><span class="lineNum">     683 </span>            : </a>
+<span class="lineNum">     684 </span>            :         template &lt;class iterator&gt;
+<span class="lineNum">     685 </span><span class="lineCov">          1 :         auto static read(detail::header &amp;&amp; h, iterator &amp;, iterator &amp;)</span>
+<span class="lineNum">     686 </span>            :             -&gt; reconnect {
+<span class="lineNum">     687 </span><span class="lineCov">          1 :             return reconnect(std::move(h));</span>
+<span class="lineNum">     688 </span>            :         }
+<span class="lineNum">     689 </span>            : 
+<span class="lineNum">     690 </span>            :         enum detail::types static const type = detail::types::reconnect;
+<span class="lineNum">     691 </span>            :     public:
+<span class="lineNum">     692 </span>            :         /*! \brief Create a message signalling a worker to re-register.
+<span class="lineNum">     693 </span>            :          *
+<span class="lineNum">     694 </span>            :          * \param p The unexpected ping message that was sent to the broker.
+<span class="lineNum">     695 </span>            :          */
+<span class="lineNum">     696 </span>            :         auto static make(ping &amp;&amp; p) noexcept -&gt; reconnect;
+<span class="lineNum">     697 </span>            : 
+<span class="lineNum">     698 </span>            :         friend auto read(std::vector&lt;zmq::message_t&gt; &amp;&amp; parts) -&gt; any_message;
+<span class="lineNum">     699 </span>            :         friend struct detail::sender;
+<span class="lineNum">     700 </span>            :     };
+<span class="lineNum">     701 </span>            : };
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

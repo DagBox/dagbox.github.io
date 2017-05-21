@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title="STL class. " alt="" coords="5,56,120,83"/>
+<area shape="rect" id="node2" title="STL class. " alt="" coords="168,56,307,83"/>
+<area shape="rect" id="node3" href="$classexception_1_1fatal.html" title="An unexpected error that can&#39;t be recovered from. " alt="" coords="398,5,522,32"/>
+<area shape="rect" id="node4" href="$classmsg_1_1exception_1_1malformed.html" title="A malformed message was recieved. " alt="" coords="359,56,561,83"/>
+<area shape="rect" id="node5" href="$classmsg_1_1exception_1_1unsupported__version.html" title="A message using an unsupported version of the protocol was recieved. " alt="" coords="355,107,565,149"/>
+</map>

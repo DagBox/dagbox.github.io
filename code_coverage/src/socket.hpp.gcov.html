@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info.cleaned - src/socket.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - socket.hpp<span style="font-size: 80%;"> (source / <a href="socket.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info.cleaned</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2017-05-21 23:37:28</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<span class="lineNum">       2 </span>            :   Copyright 2017 Kaan Genç
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            :   This file is part of DagBox.
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            :   DagBox is free software: you can redistribute it and/or modify it
+<span class="lineNum">       7 </span>            :   under the terms of the GNU Lesser General Public License as
+<span class="lineNum">       8 </span>            :   published by the Free Software Foundation, either version 3 of the
+<span class="lineNum">       9 </span>            :   License, or (at your option) any later version.
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :   DagBox is distributed in the hope that it will be useful, but
+<span class="lineNum">      12 </span>            :   WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      13 </span>            :   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+<span class="lineNum">      14 </span>            :   Lesser General Public License for more details.
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            :   You should have received a copy of the GNU Lesser General Public
+<span class="lineNum">      17 </span>            :   License along with DagBox.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+<span class="lineNum">      18 </span>            :  */
+<span class="lineNum">      19 </span>            : #pragma once
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      22 </span>            : #include &lt;tuple&gt;
+<span class="lineNum">      23 </span>            : #include &lt;zmq.hpp&gt;
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : using std::begin;
+<span class="lineNum">      26 </span>            : using std::end;
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : /*! \file socket.hpp
+<span class="lineNum">      31 </span>            :  * Extensions on ZeroMQ's socket.
+<span class="lineNum">      32 </span>            :  *
+<span class="lineNum">      33 </span>            :  * We extend socket to be able to easily send and recieve multi-part
+<span class="lineNum">      34 </span>            :  * messages.
+<span class="lineNum">      35 </span>            :  */
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : /*! 0MQ socket that can send and receive multi-part messages.
+<span class="lineNum">      40 </span>            :  *
+<span class="lineNum">      41 </span>            :  * 0MQ messages can be composed of multiple parts. This is an
+<span class="lineNum">      42 </span>            :  * extension over base 0MQ socket that can send and receive these
+<a name="43"><span class="lineNum">      43 </span>            :  * multi-part messages easily.</a>
+<span class="lineNum">      44 </span>            :  */
+<span class="lineNum">      45 </span><span class="lineCov">          6 : class socket : public zmq::socket_t</span>
+<span class="lineNum">      46 </span>            : {
+<a name="47"><span class="lineNum">      47 </span>            : public:</a>
+<span class="lineNum">      48 </span>            :     // Just use regular socket's constructors
+<span class="lineNum">      49 </span><span class="lineCov">          6 :     using socket_t::socket_t;</span>
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            :     /*! \brief Recieve a message that has multiple parts as a stream.
+<span class="lineNum">      52 </span>            :      *
+<span class="lineNum">      53 </span>            :      * \returns Parts of the message that was received. If the socket
+<span class="lineNum">      54 </span>            :      * was configured to time out, the vector may be empty.
+<span class="lineNum">      55 </span>            :      */
+<span class="lineNum">      56 </span>            :     auto recv_multimsg() -&gt; std::vector&lt;zmq::message_t&gt;;
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            :     /*! \brief Send a message that has multiple parts.
+<span class="lineNum">      59 </span>            :      *
+<span class="lineNum">      60 </span>            :      * \param cont A container of any type that yields message parts
+<span class="lineNum">      61 </span>            :      * when iterated. For example, a `std::vector&lt;zmq::message_t&gt;`.
+<a name="62"><span class="lineNum">      62 </span>            :      */</a>
+<span class="lineNum">      63 </span>            :     template &lt;class container&gt;
+<span class="lineNum">      64 </span><span class="lineCov">         11 :     auto send_multimsg(container &amp;&amp; cont) -&gt; void</span>
+<span class="lineNum">      65 </span>            :     {
+<span class="lineNum">      66 </span>            :         typedef typename container::iterator iterator;
+<span class="lineNum">      67 </span><span class="lineCov">         11 :         iterator iter = begin(cont);</span>
+<span class="lineNum">      68 </span><span class="lineCov">         11 :         iterator last = end(cont);</span>
+<span class="lineNum">      69 </span><span class="lineCov">        145 :         while (iter != last) {</span>
+<span class="lineNum">      70 </span><span class="lineCov">        134 :             auto part = std::move(*iter);</span>
+<span class="lineNum">      71 </span><span class="lineCov">         67 :             ++iter;</span>
+<span class="lineNum">      72 </span><span class="lineCov">         67 :             if (iter != last) { // More parts to send</span>
+<span class="lineNum">      73 </span><span class="lineCov">         56 :                 send(part, ZMQ_SNDMORE);</span>
+<span class="lineNum">      74 </span>            :             } else {
+<span class="lineNum">      75 </span><span class="lineCov">         11 :                 send(part);</span>
+<span class="lineNum">      76 </span>            :             }
+<span class="lineNum">      77 </span>            :         }
+<span class="lineNum">      78 </span><span class="lineCov">         11 :     }</span>
+<span class="lineNum">      79 </span>            : 
+<span class="lineNum">      80 </span>            : };
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
