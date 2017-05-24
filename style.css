@@ -11,3 +11,16 @@ div.image {
 div.image > * {
     width: 100%;
 }
+
+#projectlogo img {
+    width: 100%;
+    max-width: 40em;
+}
+
+#titlearea {
+    background-color: #e5e9f2;
+}
+
+#titlearea #projectname {
+    display: none;
+}

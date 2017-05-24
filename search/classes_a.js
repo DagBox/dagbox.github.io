@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['socket',['socket',['../classsocket.html',1,'']]],
-  ['storage',['storage',['../classdata_1_1storage.html',1,'data']]]
+  ['unsupported_5fversion',['unsupported_version',['../classmsg_1_1exception_1_1unsupported__version.html',1,'msg::exception']]]
 ];

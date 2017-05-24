@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lock',['lock',['../classlock_1_1lock.html',1,'lock']]]
+  ['malformed',['malformed',['../classmsg_1_1exception_1_1malformed.html',1,'msg::exception']]]
 ];

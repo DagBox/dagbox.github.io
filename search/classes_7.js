@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['malformed',['malformed',['../classmsg_1_1exception_1_1malformed.html',1,'msg::exception']]]
+  ['ping',['ping',['../classmsg_1_1ping.html',1,'msg']]],
+  ['pong',['pong',['../classmsg_1_1pong.html',1,'msg']]]
 ];
